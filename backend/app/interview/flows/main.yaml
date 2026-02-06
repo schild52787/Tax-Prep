@@ -1,0 +1,36 @@
+# Main interview flow definition
+# Defines the ordered list of sections that make up the tax prep interview
+
+flow_name: "Tax Return Interview"
+tax_year: 2025
+
+sections:
+  - id: personal_info
+    title: "Personal Information"
+    description: "Tell us about yourself and your family"
+    flow_file: personal_info.yaml
+    icon: "person"
+
+  - id: income
+    title: "Income"
+    description: "Report your income from all sources"
+    flow_file: income.yaml
+    icon: "dollar"
+
+  - id: deductions
+    title: "Deductions"
+    description: "Maximize your deductions to lower your tax bill"
+    flow_file: deductions.yaml
+    icon: "receipt"
+
+  - id: credits
+    title: "Credits"
+    description: "Claim credits to reduce your taxes"
+    flow_file: credits.yaml
+    icon: "star"
+
+  - id: review
+    title: "Review & File"
+    description: "Review your return and check for errors"
+    flow_file: review.yaml
+    icon: "check"

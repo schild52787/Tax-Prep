@@ -1,0 +1,163 @@
+# Deductions section flow
+section_id: deductions
+title: "Deductions"
+
+steps:
+  - id: deductions_intro
+    type: info
+    title: "Let's look at your deductions"
+    description: >
+      Deductions reduce your taxable income. You can either take the standard deduction
+      or itemize your deductions -- whichever gives you the bigger benefit.
+    content: >
+      The standard deduction for 2025 is $15,000 for Single filers and $30,000 for
+      Married Filing Jointly. We'll help you figure out which option saves you more.
+
+  - id: deduction_method
+    type: yes_no
+    title: "Would you like to itemize your deductions?"
+    description: >
+      If your total itemized deductions exceed the standard deduction, itemizing will
+      save you money. Common itemized deductions include mortgage interest, state and
+      local taxes, and charitable contributions. If you're not sure, select "Yes" and
+      we'll compare both options for you.
+
+  - id: medical_expenses
+    type: form_entry
+    title: "Medical and Dental Expenses"
+    description: >
+      You can deduct medical and dental expenses that exceed 7.5% of your adjusted
+      gross income. Include costs for doctors, dentists, prescriptions, health insurance
+      premiums (if not paid pre-tax), and other qualifying medical expenses.
+    condition: "wants_itemized == true"
+    fields:
+      - name: medical_expenses
+        label: "Total medical and dental expenses"
+        type: currency
+        required: true
+        help_text: "Include amounts you paid that were not reimbursed by insurance."
+
+  - id: salt_deduction
+    type: form_entry
+    title: "State and Local Taxes (SALT)"
+    description: >
+      You can deduct state and local income taxes, real estate taxes, and personal
+      property taxes. The total SALT deduction is capped at $10,000 ($5,000 if
+      Married Filing Separately).
+    condition: "wants_itemized == true"
+    fields:
+      - name: state_income_tax_paid
+        label: "State and local income taxes paid"
+        type: currency
+        required: true
+        help_text: "This may already be on your W-2 or estimated tax payments."
+      - name: real_estate_tax_paid
+        label: "Real estate (property) taxes paid"
+        type: currency
+        required: false
+      - name: personal_property_tax
+        label: "Personal property taxes paid"
+        type: currency
+        required: false
+        help_text: "For example, vehicle registration fees based on value."
+
+  - id: mortgage_interest
+    type: form_entry
+    title: "Mortgage Interest"
+    description: >
+      You can deduct interest paid on a mortgage for your main home or second home,
+      up to $750,000 of mortgage debt ($375,000 if Married Filing Separately).
+    condition: "wants_itemized == true"
+    fields:
+      - name: mortgage_interest_1098
+        label: "Mortgage interest from Form 1098"
+        type: currency
+        required: true
+      - name: mortgage_interest_not_1098
+        label: "Mortgage interest not on Form 1098"
+        type: currency
+        required: false
+      - name: mortgage_points
+        label: "Points paid on purchase of main home"
+        type: currency
+        required: false
+      - name: mortgage_loan_amount
+        label: "Outstanding mortgage balance"
+        type: currency
+        required: false
+        help_text: "Total outstanding balance of all mortgages."
+      - name: investment_interest
+        label: "Investment interest expense"
+        type: currency
+        required: false
+
+  - id: charitable_contributions
+    type: form_entry
+    title: "Charitable Contributions"
+    description: >
+      You can deduct contributions to qualified charitable organizations. Make sure
+      you have receipts or acknowledgment letters for donations over $250.
+    condition: "wants_itemized == true"
+    fields:
+      - name: cash_charitable
+        label: "Cash contributions"
+        type: currency
+        required: true
+        help_text: "Include checks, credit card charges, and online donations."
+      - name: noncash_charitable
+        label: "Noncash contributions (clothing, household items, etc.)"
+        type: currency
+        required: false
+      - name: carryover_charitable
+        label: "Charitable contribution carryover from prior year"
+        type: currency
+        required: false
+
+  - id: other_deductions
+    type: form_entry
+    title: "Other Itemized Deductions"
+    description: "Enter any other itemized deductions not covered in previous steps."
+    condition: "wants_itemized == true"
+    fields:
+      - name: casualty_loss
+        label: "Casualty and theft losses (federally declared disaster only)"
+        type: currency
+        required: false
+      - name: other_deductions
+        label: "Other itemized deductions"
+        type: currency
+        required: false
+      - name: other_deductions_description
+        label: "Description of other deductions"
+        type: text
+        required: false
+        max_length: 500
+
+  - id: deduction_comparison
+    type: computed_display
+    title: "Standard vs. Itemized Deduction Comparison"
+    description: >
+      Here's how your itemized deductions compare to the standard deduction.
+      We'll use whichever is higher to minimize your tax.
+    condition: "wants_itemized == true"
+    computed_fields:
+      - name: standard_deduction_amount
+        label: "Your Standard Deduction"
+        computation: "standard_deduction_for_status"
+      - name: total_itemized
+        label: "Your Total Itemized Deductions"
+        computation: "sum_itemized_deductions"
+      - name: recommended_method
+        label: "Recommended Method"
+        computation: "recommended_deduction_method"
+      - name: tax_savings
+        label: "Additional Savings from Itemizing"
+        computation: "itemized_savings_over_standard"
+
+  - id: deductions_complete
+    type: info
+    title: "Deductions Section Complete"
+    description: >
+      We've captured all your deduction information. Next, we'll look at tax credits
+      that can directly reduce your tax bill.
+    content: "Click Continue to move on to the Credits section."

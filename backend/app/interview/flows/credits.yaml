@@ -1,0 +1,162 @@
+# Credits section flow
+section_id: credits
+title: "Credits"
+
+steps:
+  - id: credits_intro
+    type: info
+    title: "Let's check for tax credits"
+    description: >
+      Tax credits directly reduce your tax bill, dollar for dollar. Some credits are
+      even refundable, meaning they can increase your refund even if you don't owe
+      any tax.
+    content: "We'll check if you qualify for common tax credits based on the information you've provided."
+
+  - id: child_tax_credit_info
+    type: computed_display
+    title: "Child Tax Credit"
+    description: >
+      The Child Tax Credit is worth up to $2,000 per qualifying child under age 17.
+      A portion of the credit (up to $1,700) may be refundable as the Additional
+      Child Tax Credit.
+    condition: "has_dependents"
+    computed_fields:
+      - name: qualifying_children_count
+        label: "Number of Qualifying Children"
+        computation: "count_qualifying_children"
+      - name: estimated_child_credit
+        label: "Estimated Child Tax Credit"
+        computation: "estimate_child_tax_credit"
+      - name: credit_phase_out_note
+        label: "Phase-out Note"
+        computation: "child_credit_phase_out_note"
+
+  - id: other_dependent_credit_info
+    type: computed_display
+    title: "Credit for Other Dependents"
+    description: >
+      You may be able to claim a $500 nonrefundable credit for each dependent
+      who doesn't qualify for the Child Tax Credit (e.g., dependents 17 or older,
+      or other qualifying relatives).
+    condition: "has_dependents"
+    computed_fields:
+      - name: other_dependents_count
+        label: "Number of Other Dependents"
+        computation: "count_other_dependents"
+      - name: estimated_other_dependent_credit
+        label: "Estimated Credit for Other Dependents"
+        computation: "estimate_other_dependent_credit"
+
+  - id: has_education_expenses
+    type: yes_no
+    title: "Did you or a dependent have education expenses?"
+    description: >
+      If you, your spouse, or a dependent attended college or took courses at an
+      eligible educational institution, you may qualify for an education credit.
+
+  - id: education_expense_entry
+    type: form_entry
+    title: "Enter education expenses"
+    description: >
+      Enter information about tuition and related expenses. You may qualify for the
+      American Opportunity Credit (up to $2,500) or the Lifetime Learning Credit
+      (up to $2,000).
+    condition: "has_education_expenses == true"
+    repeating: true
+    repeat_prompt: "Do you have education expenses for another student?"
+    fields:
+      - name: student_name
+        label: "Student Name"
+        type: text
+        required: true
+        max_length: 100
+      - name: institution_name
+        label: "School Name"
+        type: text
+        required: true
+        max_length: 200
+      - name: institution_ein
+        label: "School EIN (from 1098-T)"
+        type: text
+        required: false
+        max_length: 20
+      - name: qualified_expenses
+        label: "Qualified Tuition and Related Expenses"
+        type: currency
+        required: true
+      - name: scholarships_received
+        label: "Scholarships and Grants Received"
+        type: currency
+        required: false
+      - name: is_first_four_years
+        label: "Is this within the first 4 years of postsecondary education?"
+        type: boolean
+        required: true
+      - name: is_at_least_half_time
+        label: "Was the student enrolled at least half-time?"
+        type: boolean
+        required: true
+      - name: credit_type
+        label: "Preferred Credit Type"
+        type: select
+        required: true
+        options:
+          - value: aotc
+            label: "American Opportunity Tax Credit (AOTC)"
+          - value: llc
+            label: "Lifetime Learning Credit (LLC)"
+
+  - id: has_retirement_contributions
+    type: yes_no
+    title: "Did you make retirement contributions?"
+    description: >
+      If you contributed to a traditional IRA, Roth IRA, 401(k), or other retirement
+      plan, you may qualify for the Retirement Savings Contributions Credit (Saver's Credit).
+
+  - id: retirement_contribution_entry
+    type: form_entry
+    title: "Enter retirement contributions"
+    description: >
+      Enter your retirement contributions for the tax year. Note: employer contributions
+      and rollovers don't count for the Saver's Credit.
+    condition: "has_retirement_contributions == true"
+    repeating: true
+    repeat_prompt: "Do you have retirement contributions for another person (e.g., spouse)?"
+    fields:
+      - name: contributor
+        label: "Who made the contribution?"
+        type: select
+        required: true
+        options:
+          - value: primary
+            label: "Primary Taxpayer"
+          - value: spouse
+            label: "Spouse"
+      - name: traditional_ira
+        label: "Traditional IRA Contributions"
+        type: currency
+        required: false
+      - name: roth_ira
+        label: "Roth IRA Contributions"
+        type: currency
+        required: false
+      - name: employer_401k
+        label: "401(k) Employee Contributions"
+        type: currency
+        required: false
+      - name: employer_403b
+        label: "403(b) Employee Contributions"
+        type: currency
+        required: false
+      - name: employer_457
+        label: "457(b) Employee Contributions"
+        type: currency
+        required: false
+
+  - id: credits_complete
+    type: info
+    title: "Credits Section Complete"
+    description: >
+      We've checked all available credits. Now let's review your complete return
+      to make sure everything looks correct.
+    content: "Click Continue to move on to the Review section."

@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { listW2s, createW2, deleteW2 } from '../../api/income';
 import { useForm } from 'react-hook-form';
 import { Plus, Trash2, ArrowLeft, ArrowRight } from 'lucide-react';
+import { DocumentUploader } from './DocumentUploader';
 
 interface Props {
   returnId: string;
@@ -53,8 +54,13 @@ export function IncomeSection({ returnId, onNext, onBack }: Props) {
     <div>
       <h2 className="text-xl font-bold text-gray-800 mb-1">Income</h2>
       <p className="text-sm text-gray-500 mb-6">
-        Enter your W-2 wage statements from each employer.
+        Enter your W-2 wage statements from each employer, or upload a PDF to auto-extract.
       </p>
+
+      {/* Document Upload */}
+      <div className="mb-6 bg-surface-dark rounded-lg p-4">
+        <DocumentUploader returnId={returnId} />
+      </div>
 
       {/* Existing W-2s */}
       {w2s.length > 0 && (

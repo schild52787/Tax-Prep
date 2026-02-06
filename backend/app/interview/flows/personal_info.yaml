@@ -1,0 +1,199 @@
+# Personal Information section flow
+section_id: personal_info
+title: "Personal Information"
+
+steps:
+  - id: filing_status
+    type: form_entry
+    title: "What is your filing status?"
+    description: >
+      Your filing status determines your tax rates and standard deduction amount.
+      If you were married on December 31st of the tax year, you may file jointly
+      with your spouse.
+    fields:
+      - name: filing_status
+        label: "Filing Status"
+        type: select
+        required: true
+        options:
+          - value: single
+            label: "Single"
+          - value: married_filing_jointly
+            label: "Married Filing Jointly"
+
+  - id: primary_taxpayer_info
+    type: form_entry
+    title: "Tell us about yourself"
+    description: "Enter your personal information as it appears on your Social Security card."
+    fields:
+      - name: first_name
+        label: "First Name"
+        type: text
+        required: true
+        max_length: 50
+      - name: middle_initial
+        label: "Middle Initial"
+        type: text
+        required: false
+        max_length: 1
+      - name: last_name
+        label: "Last Name"
+        type: text
+        required: true
+        max_length: 50
+      - name: ssn
+        label: "Social Security Number"
+        type: ssn
+        required: true
+        masked: true
+      - name: date_of_birth
+        label: "Date of Birth"
+        type: date
+        required: true
+      - name: occupation
+        label: "Occupation"
+        type: text
+        required: false
+        max_length: 100
+
+  - id: primary_address
+    type: form_entry
+    title: "What is your mailing address?"
+    description: "Enter the address where you want to receive correspondence from the IRS."
+    fields:
+      - name: street_address
+        label: "Street Address"
+        type: text
+        required: true
+        max_length: 200
+      - name: apt_number
+        label: "Apt/Suite Number"
+        type: text
+        required: false
+        max_length: 20
+      - name: city
+        label: "City"
+        type: text
+        required: true
+        max_length: 100
+      - name: state
+        label: "State"
+        type: state_select
+        required: true
+      - name: zip_code
+        label: "ZIP Code"
+        type: text
+        required: true
+        pattern: "^\\d{5}(-\\d{4})?$"
+
+  - id: spouse_info
+    type: form_entry
+    title: "Tell us about your spouse"
+    description: "Enter your spouse's information as it appears on their Social Security card."
+    condition: "filing_status == married_filing_jointly"
+    fields:
+      - name: spouse_first_name
+        label: "Spouse's First Name"
+        type: text
+        required: true
+        max_length: 50
+      - name: spouse_middle_initial
+        label: "Spouse's Middle Initial"
+        type: text
+        required: false
+        max_length: 1
+      - name: spouse_last_name
+        label: "Spouse's Last Name"
+        type: text
+        required: true
+        max_length: 50
+      - name: spouse_ssn
+        label: "Spouse's Social Security Number"
+        type: ssn
+        required: true
+        masked: true
+      - name: spouse_date_of_birth
+        label: "Spouse's Date of Birth"
+        type: date
+        required: true
+      - name: spouse_occupation
+        label: "Spouse's Occupation"
+        type: text
+        required: false
+        max_length: 100
+
+  - id: has_dependents
+    type: yes_no
+    title: "Do you have any dependents?"
+    description: >
+      A dependent is a qualifying child or relative who relies on you for financial
+      support. Claiming dependents can reduce your tax bill through credits and deductions.
+
+  - id: dependent_entry
+    type: form_entry
+    title: "Add a dependent"
+    description: "Enter your dependent's information. You can add more dependents after this one."
+    condition: "has_dependents == true"
+    repeating: true
+    repeat_prompt: "Do you have another dependent to add?"
+    fields:
+      - name: dependent_first_name
+        label: "Dependent's First Name"
+        type: text
+        required: true
+        max_length: 50
+      - name: dependent_last_name
+        label: "Dependent's Last Name"
+        type: text
+        required: true
+        max_length: 50
+      - name: dependent_ssn
+        label: "Dependent's SSN"
+        type: ssn
+        required: true
+        masked: true
+      - name: dependent_relationship
+        label: "Relationship to You"
+        type: select
+        required: true
+        options:
+          - value: child
+            label: "Son/Daughter"
+          - value: stepchild
+            label: "Stepchild"
+          - value: foster_child
+            label: "Foster Child"
+          - value: sibling
+            label: "Brother/Sister"
+          - value: parent
+            label: "Parent"
+          - value: grandchild
+            label: "Grandchild"
+          - value: other_relative
+            label: "Other Relative"
+      - name: dependent_date_of_birth
+        label: "Dependent's Date of Birth"
+        type: date
+        required: true
+      - name: dependent_months_lived_with
+        label: "Months Lived with You"
+        type: number
+        required: true
+        min: 0
+        max: 12
+      - name: dependent_is_student
+        label: "Full-time student?"
+        type: boolean
+        required: false
+      - name: dependent_is_disabled
+        label: "Permanently disabled?"
+        type: boolean
+        required: false
+
+  - id: personal_info_review
+    type: info
+    title: "Personal Information Complete"
+    description: >
+      Great! We have all the personal information we need. Next, we'll ask about
+      your income for the tax year.
+    content: "Click Continue to move on to the Income section."

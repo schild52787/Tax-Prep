@@ -1,0 +1,316 @@
+# Income section flow
+section_id: income
+title: "Income"
+
+steps:
+  - id: income_intro
+    type: info
+    title: "Let's gather your income information"
+    description: >
+      We'll ask about the different types of income you received during the tax year.
+      Have your tax documents handy -- W-2s, 1099s, and any other income statements.
+    content: "Select the types of income you received, and we'll walk you through each one."
+
+  - id: income_type_selection
+    type: multi_select
+    title: "What types of income did you receive?"
+    description: "Select all that apply. You can always come back and add more later."
+    options:
+      - value: w2
+        label: "W-2 (Wages, salary, tips)"
+        description: "From an employer"
+      - value: 1099_int
+        label: "1099-INT (Interest income)"
+        description: "From banks, bonds, or other interest-bearing accounts"
+      - value: 1099_div
+        label: "1099-DIV (Dividend income)"
+        description: "From stocks, mutual funds, or other investments"
+      - value: 1099_b
+        label: "1099-B (Stock/investment sales)"
+        description: "Capital gains or losses from selling investments"
+      - value: 1099_r
+        label: "1099-R (Retirement distributions)"
+        description: "From pensions, annuities, IRAs, or retirement plans"
+      - value: 1099_g
+        label: "1099-G (Government payments)"
+        description: "Unemployment compensation or state tax refunds"
+      - value: ssa_1099
+        label: "SSA-1099 (Social Security benefits)"
+        description: "Social Security retirement, disability, or survivor benefits"
+
+  # W-2 Entry
+  - id: w2_entry
+    type: form_entry
+    title: "Enter your W-2 information"
+    description: >
+      Enter the information from your W-2 form. If you have multiple W-2s,
+      you can add them one at a time.
+    condition: "income_types contains w2"
+    repeating: true
+    repeat_prompt: "Do you have another W-2 to enter?"
+    fields:
+      - name: employer_name
+        label: "Employer Name"
+        type: text
+        required: true
+        max_length: 200
+      - name: employer_ein
+        label: "Employer EIN"
+        type: text
+        required: false
+        max_length: 20
+        pattern: "^\\d{2}-\\d{7}$"
+        placeholder: "XX-XXXXXXX"
+      - name: box_1_wages
+        label: "Box 1 - Wages, tips, other compensation"
+        type: currency
+        required: true
+      - name: box_2_fed_tax_withheld
+        label: "Box 2 - Federal income tax withheld"
+        type: currency
+        required: true
+      - name: box_3_ss_wages
+        label: "Box 3 - Social Security wages"
+        type: currency
+        required: false
+      - name: box_4_ss_tax
+        label: "Box 4 - Social Security tax withheld"
+        type: currency
+        required: false
+      - name: box_5_medicare_wages
+        label: "Box 5 - Medicare wages and tips"
+        type: currency
+        required: false
+      - name: box_6_medicare_tax
+        label: "Box 6 - Medicare tax withheld"
+        type: currency
+        required: false
+      - name: state
+        label: "State"
+        type: state_select
+        required: false
+      - name: state_wages
+        label: "State wages"
+        type: currency
+        required: false
+      - name: state_tax_withheld
+        label: "State income tax withheld"
+        type: currency
+        required: false
+
+  # 1099-INT Entry
+  - id: 1099_int_entry
+    type: form_entry
+    title: "Enter your 1099-INT information"
+    description: "Enter the interest income reported on your 1099-INT."
+    condition: "income_types contains 1099_int"
+    repeating: true
+    repeat_prompt: "Do you have another 1099-INT to enter?"
+    fields:
+      - name: payer_name
+        label: "Payer Name (Bank/Institution)"
+        type: text
+        required: true
+        max_length: 200
+      - name: box_1_interest
+        label: "Box 1 - Interest income"
+        type: currency
+        required: true
+      - name: box_2_early_withdrawal_penalty
+        label: "Box 2 - Early withdrawal penalty"
+        type: currency
+        required: false
+      - name: box_3_us_savings_bond
+        label: "Box 3 - Interest on U.S. Savings Bonds"
+        type: currency
+        required: false
+      - name: box_4_fed_tax_withheld
+        label: "Box 4 - Federal income tax withheld"
+        type: currency
+        required: false
+      - name: box_8_tax_exempt_interest
+        label: "Box 8 - Tax-exempt interest"
+        type: currency
+        required: false
+
+  # 1099-DIV Entry
+  - id: 1099_div_entry
+    type: form_entry
+    title: "Enter your 1099-DIV information"
+    description: "Enter the dividend income reported on your 1099-DIV."
+    condition: "income_types contains 1099_div"
+    repeating: true
+    repeat_prompt: "Do you have another 1099-DIV to enter?"
+    fields:
+      - name: payer_name
+        label: "Payer Name (Brokerage/Fund)"
+        type: text
+        required: true
+        max_length: 200
+      - name: box_1a_ordinary_dividends
+        label: "Box 1a - Total ordinary dividends"
+        type: currency
+        required: true
+      - name: box_1b_qualified_dividends
+        label: "Box 1b - Qualified dividends"
+        type: currency
+        required: false
+      - name: box_2a_total_capital_gain
+        label: "Box 2a - Total capital gain distributions"
+        type: currency
+        required: false
+      - name: box_3_nondividend_distributions
+        label: "Box 3 - Nondividend distributions"
+        type: currency
+        required: false
+      - name: box_4_fed_tax_withheld
+        label: "Box 4 - Federal income tax withheld"
+        type: currency
+        required: false
+      - name: box_7_foreign_tax_paid
+        label: "Box 7 - Foreign tax paid"
+        type: currency
+        required: false
+
+  # 1099-B / Capital Gains Entry
+  - id: capital_gains_entry
+    type: form_entry
+    title: "Enter your investment sale (1099-B)"
+    description: >
+      Enter each stock or investment sale from your 1099-B. If your broker reported
+      many transactions, you may want to enter summary totals by category.
+    condition: "income_types contains 1099_b"
+    repeating: true
+    repeat_prompt: "Do you have another investment sale to enter?"
+    fields:
+      - name: description
+        label: "Description of Property"
+        type: text
+        required: true
+        max_length: 200
+        placeholder: "e.g., 100 shares AAPL"
+      - name: date_acquired
+        label: "Date Acquired"
+        type: date
+        required: true
+      - name: date_sold
+        label: "Date Sold"
+        type: date
+        required: true
+      - name: proceeds
+        label: "Proceeds (Sales Price)"
+        type: currency
+        required: true
+      - name: cost_basis
+        label: "Cost Basis"
+        type: currency
+        required: true
+      - name: holding_period
+        label: "Holding Period"
+        type: select
+        required: true
+        options:
+          - value: short_term
+            label: "Short-term (held 1 year or less)"
+          - value: long_term
+            label: "Long-term (held more than 1 year)"
+      - name: basis_reported_to_irs
+        label: "Was the cost basis reported to the IRS?"
+        type: boolean
+        required: false
+      - name: brokerage_name
+        label: "Brokerage Name"
+        type: text
+        required: false
+        max_length: 200
+
+  # 1099-R Entry
+  - id: 1099_r_entry
+    type: form_entry
+    title: "Enter your 1099-R information"
+    description: "Enter retirement distribution information from your 1099-R."
+    condition: "income_types contains 1099_r"
+    repeating: true
+    repeat_prompt: "Do you have another 1099-R to enter?"
+    fields:
+      - name: payer_name
+        label: "Payer Name"
+        type: text
+        required: true
+        max_length: 200
+      - name: box_1_gross_distribution
+        label: "Box 1 - Gross distribution"
+        type: currency
+        required: true
+      - name: box_2a_taxable_amount
+        label: "Box 2a - Taxable amount"
+        type: currency
+        required: true
+      - name: box_4_fed_tax_withheld
+        label: "Box 4 - Federal income tax withheld"
+        type: currency
+        required: false
+      - name: box_7_distribution_code
+        label: "Box 7 - Distribution code"
+        type: text
+        required: false
+        max_length: 10
+
+  # 1099-G Entry
+  - id: 1099_g_entry
+    type: form_entry
+    title: "Enter your 1099-G information"
+    description: "Enter government payment information from your 1099-G."
+    condition: "income_types contains 1099_g"
+    repeating: true
+    repeat_prompt: "Do you have another 1099-G to enter?"
+    fields:
+      - name: payer_name
+        label: "Payer Name"
+        type: text
+        required: true
+        max_length: 200
+      - name: box_1_unemployment
+        label: "Box 1 - Unemployment compensation"
+        type: currency
+        required: false
+      - name: box_2_state_tax_refund
+        label: "Box 2 - State or local income tax refunds"
+        type: currency
+        required: false
+      - name: box_4_fed_tax_withheld
+        label: "Box 4 - Federal income tax withheld"
+        type: currency
+        required: false
+
+  # SSA-1099 Entry
+  - id: ssa_1099_entry
+    type: form_entry
+    title: "Enter your SSA-1099 information"
+    description: "Enter your Social Security benefit information from SSA-1099."
+    condition: "income_types contains ssa_1099"
+    fields:
+      - name: box_3_benefits_paid
+        label: "Box 3 - Benefits paid"
+        type: currency
+        required: true
+      - name: box_4_benefits_repaid
+        label: "Box 4 - Benefits repaid"
+        type: currency
+        required: false
+      - name: box_5_net_benefits
+        label: "Box 5 - Net benefits"
+        type: currency
+        required: true
+      - name: box_6_voluntary_withholding
+        label: "Box 6 - Voluntary federal income tax withheld"
+        type: currency
+        required: false
+
+  - id: income_summary
+    type: info
+    title: "Income Section Complete"
+    description: >
+      You've entered all your income information. Next, we'll look at deductions
+      that can reduce your taxable income.
+    content: "Click Continue to move on to the Deductions section."

@@ -1,0 +1,83 @@
+# Review section flow
+section_id: review
+title: "Review & File"
+
+steps:
+  - id: review_intro
+    type: info
+    title: "Let's review your return"
+    description: >
+      We'll show you a summary of everything you've entered and run a final
+      validation check to make sure your return is complete and accurate.
+    content: "Please review each section carefully before finalizing."
+
+  - id: return_summary
+    type: computed_display
+    title: "Tax Return Summary"
+    description: "Here's an overview of your tax return."
+    computed_fields:
+      - name: filing_status_display
+        label: "Filing Status"
+        computation: "display_filing_status"
+      - name: total_income
+        label: "Total Income"
+        computation: "calculate_total_income"
+      - name: adjusted_gross_income
+        label: "Adjusted Gross Income (AGI)"
+        computation: "calculate_agi"
+      - name: deduction_amount
+        label: "Total Deduction"
+        computation: "calculate_total_deduction"
+      - name: taxable_income
+        label: "Taxable Income"
+        computation: "calculate_taxable_income"
+      - name: total_tax
+        label: "Total Tax"
+        computation: "calculate_total_tax"
+      - name: total_credits
+        label: "Total Credits"
+        computation: "calculate_total_credits"
+      - name: total_payments
+        label: "Total Payments & Withholdings"
+        computation: "calculate_total_payments"
+      - name: refund_or_owed
+        label: "Refund / Amount Owed"
+        computation: "calculate_refund_or_owed"
+
+  - id: validation_check
+    type: computed_display
+    title: "Return Validation"
+    description: >
+      We've checked your return for common errors and missing information.
+      Please review any warnings or errors below before finalizing.
+    computed_fields:
+      - name: validation_status
+        label: "Overall Status"
+        computation: "run_validation_checks"
+      - name: errors
+        label: "Errors"
+        computation: "get_validation_errors"
+      - name: warnings
+        label: "Warnings"
+        computation: "get_validation_warnings"
+      - name: completeness
+        label: "Completeness"
+        computation: "get_completeness_percentage"
+
+  - id: final_confirmation
+    type: yes_no
+    title: "Ready to finalize your return?"
+    description: >
+      By confirming, you're indicating that all information is accurate and complete
+      to the best of your knowledge. You can still come back and make changes after
+      this step.
+
+  - id: return_complete
+    type: info
+    title: "Your return is ready!"
+    description: >
+      Congratulations! Your tax return has been completed. You can download a PDF
+      copy for your records or make further changes if needed.
+    content: >
+      Next steps: Download your completed return as a PDF, print and mail it to the IRS,
+      or review the detailed calculation breakdown.
