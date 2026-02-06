@@ -20,12 +20,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     poppler-utils \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
-COPY backend/pyproject.toml .
-RUN pip install --no-cache-dir .
-
 # Copy backend code
 COPY backend/ .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir .
 
 # Copy built frontend into static/ directory
 COPY --from=frontend-build /app/dist ./static
