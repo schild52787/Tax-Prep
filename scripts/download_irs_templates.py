@@ -14,19 +14,19 @@ from urllib.request import urlretrieve
 
 TEMPLATE_DIR = Path(__file__).resolve().parent.parent / "backend" / "app" / "pdf" / "templates"
 
-# IRS PDF download URLs (fillable forms)
+# IRS PDF download URLs (names must match form_ids in app/pdf/field_mappings)
 FORMS = {
-    "f1040": "https://www.irs.gov/pub/irs-pdf/f1040.pdf",
-    "f1040sa": "https://www.irs.gov/pub/irs-pdf/f1040sa.pdf",
-    "f1040sb": "https://www.irs.gov/pub/irs-pdf/f1040sb.pdf",
-    "f1040sd": "https://www.irs.gov/pub/irs-pdf/f1040sd.pdf",
-    "f1040s1": "https://www.irs.gov/pub/irs-pdf/f1040s1.pdf",
-    "f1040s2": "https://www.irs.gov/pub/irs-pdf/f1040s2.pdf",
-    "f1040s3": "https://www.irs.gov/pub/irs-pdf/f1040s3.pdf",
-    "f8949": "https://www.irs.gov/pub/irs-pdf/f8949.pdf",
-    "f8812": "https://www.irs.gov/pub/irs-pdf/f1040s8.pdf",
-    "f8863": "https://www.irs.gov/pub/irs-pdf/f8863.pdf",
-    "f8880": "https://www.irs.gov/pub/irs-pdf/f8880.pdf",
+    "form_1040": "https://www.irs.gov/pub/irs-pdf/f1040.pdf",
+    "schedule_a": "https://www.irs.gov/pub/irs-pdf/f1040sa.pdf",
+    "schedule_b": "https://www.irs.gov/pub/irs-pdf/f1040sb.pdf",
+    "schedule_d": "https://www.irs.gov/pub/irs-pdf/f1040sd.pdf",
+    "schedule_1": "https://www.irs.gov/pub/irs-pdf/f1040s1.pdf",
+    "schedule_2": "https://www.irs.gov/pub/irs-pdf/f1040s2.pdf",
+    "schedule_3": "https://www.irs.gov/pub/irs-pdf/f1040s3.pdf",
+    "form_8949": "https://www.irs.gov/pub/irs-pdf/f8949.pdf",
+    "schedule_8812": "https://www.irs.gov/pub/irs-pdf/f1040s8.pdf",
+    "form_8863": "https://www.irs.gov/pub/irs-pdf/f8863.pdf",
+    "form_8880": "https://www.irs.gov/pub/irs-pdf/f8880.pdf",
 }
 
 
