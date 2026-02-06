@@ -1,53 +1,52 @@
-"""Download official IRS fillable PDF templates for tax year 2025.
+#!/usr/bin/env python3
+"""Download official IRS fillable PDF form templates.
 
 Usage:
     python scripts/download_irs_templates.py
+
+Downloads all required IRS PDF forms into backend/app/pdf/templates/.
+These forms are used by the PDF generator to produce filled tax returns.
 """
 
 import sys
 from pathlib import Path
+from urllib.request import urlretrieve
 
-import httpx
+TEMPLATE_DIR = Path(__file__).resolve().parent.parent / "backend" / "app" / "pdf" / "templates"
 
-IRS_BASE = "https://www.irs.gov/pub/irs-pdf"
-
-TEMPLATES = {
-    "form_1040": f"{IRS_BASE}/f1040.pdf",
-    "schedule_a": f"{IRS_BASE}/f1040sa.pdf",
-    "schedule_b": f"{IRS_BASE}/f1040sb.pdf",
-    "schedule_d": f"{IRS_BASE}/f1040sd.pdf",
-    "schedule_1": f"{IRS_BASE}/f1040s1.pdf",
-    "schedule_2": f"{IRS_BASE}/f1040s2.pdf",
-    "schedule_3": f"{IRS_BASE}/f1040s3.pdf",
-    "form_8949": f"{IRS_BASE}/f8949.pdf",
-    "form_8863": f"{IRS_BASE}/f8863.pdf",
-    "form_8880": f"{IRS_BASE}/f8880.pdf",
+# IRS PDF download URLs (fillable forms)
+FORMS = {
+    "f1040": "https://www.irs.gov/pub/irs-pdf/f1040.pdf",
+    "f1040sa": "https://www.irs.gov/pub/irs-pdf/f1040sa.pdf",
+    "f1040sb": "https://www.irs.gov/pub/irs-pdf/f1040sb.pdf",
+    "f1040sd": "https://www.irs.gov/pub/irs-pdf/f1040sd.pdf",
+    "f1040s1": "https://www.irs.gov/pub/irs-pdf/f1040s1.pdf",
+    "f1040s2": "https://www.irs.gov/pub/irs-pdf/f1040s2.pdf",
+    "f1040s3": "https://www.irs.gov/pub/irs-pdf/f1040s3.pdf",
+    "f8949": "https://www.irs.gov/pub/irs-pdf/f8949.pdf",
+    "f8812": "https://www.irs.gov/pub/irs-pdf/f1040s8.pdf",
+    "f8863": "https://www.irs.gov/pub/irs-pdf/f8863.pdf",
+    "f8880": "https://www.irs.gov/pub/irs-pdf/f8880.pdf",
 }
 
 
-def download_templates(output_dir: str = "backend/app/pdf/templates") -> None:
-    dest = Path(output_dir)
-    dest.mkdir(parents=True, exist_ok=True)
+def main() -> None:
+    TEMPLATE_DIR.mkdir(parents=True, exist_ok=True)
 
-    client = httpx.Client(timeout=30, follow_redirects=True)
-
-    for form_id, url in TEMPLATES.items():
-        filepath = dest / f"{form_id}.pdf"
-        if filepath.exists():
-            print(f"  Skipping {form_id} (already exists)")
+    for name, url in FORMS.items():
+        dest = TEMPLATE_DIR / f"{name}.pdf"
+        if dest.exists():
+            print(f"  [skip] {name}.pdf already exists")
             continue
-        print(f"  Downloading {form_id} from {url}")
+        print(f"  [download] {name}.pdf from {url}")
         try:
-            response = client.get(url)
-            response.raise_for_status()
-            filepath.write_bytes(response.content)
-            print(f"    Saved to {filepath} ({len(response.content):,} bytes)")
-        except httpx.HTTPError as e:
-            print(f"    ERROR downloading {form_id}: {e}", file=sys.stderr)
+            urlretrieve(url, dest)
+            print(f"  [ok] {name}.pdf ({dest.stat().st_size:,} bytes)")
+        except Exception as e:
+            print(f"  [error] {name}.pdf: {e}", file=sys.stderr)
 
-    client.close()
-    print("Done.")
+    print(f"\nTemplates saved to: {TEMPLATE_DIR}")
 
 
 if __name__ == "__main__":
-    download_templates()
+    main()
