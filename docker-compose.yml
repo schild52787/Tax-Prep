@@ -1,0 +1,27 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./backend/app/pdf/templates:/app/app/pdf/templates
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:///./data/taxprep.db
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY:-dev-key-change-in-production}
+      - FRONTEND_URL=http://localhost:3000
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      backend:
+        condition: service_healthy
